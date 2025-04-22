@@ -4,7 +4,7 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 session_start();
-require './database/database.php'; // Corrected path
+require './database/database.php'; 
 $pdo = Database::connect();
 
 $error = '';
@@ -17,11 +17,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $fname = $_POST['fname'];
     $lname = $_POST['lname'];
     $mobile = $_POST['mobile'];
-    $admin = 'N'; // Default to non-admin
-
+    $admin = 'N'; 
     $errors = [];
 
-    // Validate inputs
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $errors[] = "Invalid email format.";
     }
@@ -32,7 +30,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $errors[] = "Passwords do not match.";
     }
 
-    // Check if email already exists
     $stmt = $pdo->prepare("SELECT COUNT(*) FROM iss_persons WHERE email = :email");
     $stmt->execute(['email' => $email]);
     if ($stmt->fetchColumn() > 0) {
@@ -40,20 +37,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     if (empty($errors)) {
-        // Hash the password
         $hashedPassword = md5('learn' . $password);
 
-        // Generate a verification token
         $verifyToken = bin2hex(random_bytes(16));
 
-        // Insert user into the database
         $sql = "INSERT INTO iss_persons (email, pwd_hash, pwd_salt, fname, lname, admin, mobile, verify_token, verified) 
                 VALUES (:email, :pwd_hash, :pwd_salt, :fname, :lname, :admin, :mobile, :verify_token, 0)";
         $stmt = $pdo->prepare($sql);
         $stmt->execute([
             'email' => $email,
-            'pwd_hash' => $hashedPassword, // Store the hashed password here
-            'pwd_salt' => @$password, // Store the fixed salt here
+            'pwd_hash' => $hashedPassword, 
+            'pwd_salt' => @$password, 
             'fname' => $fname,
             'lname' => $lname,
             'admin' => $admin,
@@ -61,7 +55,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             'verify_token' => $verifyToken
         ]);
 
-        // Send verification email
         $verificationLink = "http://localhost/CIS355/final/verify_email.php?email=$email&token=$verifyToken";
         mail($email, "Verify Your Email", "Click this link to verify your email: $verificationLink");
 

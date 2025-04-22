@@ -10,28 +10,24 @@ if (!isset($_SESSION['user_id'])) {
     exit(); 
 }
 
-// Corrected path to database.php
 require './database/database.php';
 
 $pdo = Database::connect();
 $error_message = "";
 
-// Handle "Add New Issue" form submission
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['create_issue'])) {
     $short_description = $_POST['short_description'];
     $long_description = $_POST['long_description'];
-    $open_date = !empty($_POST['open_date']) ? $_POST['open_date'] : null; // Optional
-    $close_date = !empty($_POST['close_date']) ? $_POST['close_date'] : '0000-00-00'; // Default to "0000-00-00" if empty
-    $priority = !empty($_POST['priority']) ? $_POST['priority'] : null; // Optional
-    $org = !empty($_POST['org']) ? $_POST['org'] : null; // Optional
-    $project = !empty($_POST['project']) ? $_POST['project'] : null; // Optional
-    $per_id = !empty($_POST['per_id']) ? $_POST['per_id'] : null; // Optional
+    $open_date = !empty($_POST['open_date']) ? $_POST['open_date'] : null; 
+    $close_date = !empty($_POST['close_date']) ? $_POST['close_date'] : '0000-00-00';  
+    $priority = !empty($_POST['priority']) ? $_POST['priority'] : null; 
+    $org = !empty($_POST['org']) ? $_POST['org'] : null; 
+    $project = !empty($_POST['project']) ? $_POST['project'] : null; 
+    $per_id = !empty($_POST['per_id']) ? $_POST['per_id'] : null; 
 
-    // Validate required fields
     if (empty($short_description) || empty($long_description)) {
         $error_message = "Short description and long description are required.";
     } else {
-        // Insert the new issue into the database
         $sql = "INSERT INTO iss_issues (short_description, long_description, open_date, close_date, priority, org, project, per_id) 
                 VALUES (:short_description, :long_description, :open_date, :close_date, :priority, :org, :project, :per_id)";
         $stmt = $pdo->prepare($sql);
@@ -39,32 +35,29 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['create_issue'])) {
             'short_description' => $short_description,
             'long_description' => $long_description,
             'open_date' => $open_date,
-            'close_date' => $close_date, // Use "0000-00-00" if empty
+            'close_date' => $close_date,
             'priority' => $priority,
             'org' => $org,
             'project' => $project,
             'per_id' => $per_id
         ]);
 
-        // Reload the page to display the updated list of issues
         header("Location: issues_list.php");
         exit();
     }
 }
 
-// Handle "Update Issue" form submission
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_issue'])) {
     $id = $_POST['id'];
     $short_description = $_POST['short_description'];
     $long_description = $_POST['long_description'];
     $open_date = $_POST['open_date'];
-    $close_date = !empty($_POST['close_date']) ? $_POST['close_date'] : '0000-00-00'; // Default to "0000-00-00" if empty
+    $close_date = !empty($_POST['close_date']) ? $_POST['close_date'] : '0000-00-00'; 
     $priority = $_POST['priority'];
     $org = $_POST['org'];
     $project = $_POST['project'];
     $per_id = $_POST['per_id'];
 
-    // Update the issue in the database
     $sql = "UPDATE iss_issues 
             SET short_description = :short_description, 
                 long_description = :long_description, 
@@ -80,7 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_issue'])) {
         'short_description' => $short_description,
         'long_description' => $long_description,
         'open_date' => $open_date,
-        'close_date' => $close_date, // Use "0000-00-00" if empty
+        'close_date' => $close_date, 
         'priority' => $priority,
         'org' => $org,
         'project' => $project,
@@ -88,50 +81,40 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_issue'])) {
         'id' => $id
     ]);
 
-    // Reload the page to display the updated list of issues
     header("Location: issues_list.php");
     exit();
 }
 
-// Handle "Delete Issue" form submission
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete_issue'])) {
     $id = $_POST['id'];
 
-    // Delete the issue from the database
     $sql = "DELETE FROM iss_issues WHERE id = :id";
     $stmt = $pdo->prepare($sql);
     $stmt->execute(['id' => $id]);
 
-    // Reload the page to display the updated list of issues
     header("Location: issues_list.php");
     exit();
 }
 
-// Fetch persons for dropdown list
 $persons_sql = "SELECT id, fname, lname FROM iss_persons ORDER BY lname ASC";
 $persons_stmt = $pdo->query($persons_sql);
 $persons = $persons_stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Determine the filter column and value
 $filter_column = isset($_GET['filter_column']) ? $_GET['filter_column'] : null;
 $filter_value = isset($_GET['filter_value']) ? $_GET['filter_value'] : null;
 
-// Determine the sort column and direction
-$sort_column = isset($_GET['sort_column']) ? $_GET['sort_column'] : 'id'; // Default to "id"
-$sort_direction = isset($_GET['sort_direction']) && in_array($_GET['sort_direction'], ['asc', 'desc']) ? $_GET['sort_direction'] : 'asc'; // Default to "asc"
-$priority_sort = isset($_GET['priority_sort']) ? $_GET['priority_sort'] : null; // Custom priority sorting
+$sort_column = isset($_GET['sort_column']) ? $_GET['sort_column'] : 'id'; 
+$sort_direction = isset($_GET['sort_direction']) && in_array($_GET['sort_direction'], ['asc', 'desc']) ? $_GET['sort_direction'] : 'asc';
+$priority_sort = isset($_GET['priority_sort']) ? $_GET['priority_sort'] : null; 
 
-// Pagination settings
-$records_per_page = 5; // Number of issues per page
-$current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1; // Get current page from URL, default to 1
-$offset = ($current_page - 1) * $records_per_page; // Calculate the offset
+$records_per_page = 5; 
+$current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1; 
+$offset = ($current_page - 1) * $records_per_page; 
 
-// Fetch total number of issues
 $total_issues_sql = "SELECT COUNT(*) FROM iss_issues";
 $total_issues = $pdo->query($total_issues_sql)->fetchColumn();
-$total_pages = ceil($total_issues / $records_per_page); // Calculate total pages
+$total_pages = ceil($total_issues / $records_per_page); 
 
-// Fetch issues for the current page with sorting
 if ($sort_column === 'priority' && $priority_sort === 'high_to_low') {
     $sql = "SELECT * FROM iss_issues 
             ORDER BY 
@@ -229,7 +212,6 @@ $issues = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         </td>
                     </tr>
 
-                    <!-- Add Issue Modal -->
                     <div class="modal fade" id="addIssueModal" tabindex="-1">
                         <div class="modal-dialog">
                             <div class="modal-content">
@@ -282,7 +264,6 @@ $issues = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         </div>
                     </div>
 
-                    <!-- Read Modal -->
                     <div class="modal fade" id="readIssue<?= $issue['id']; ?>" tabindex="-1">
                         <div class="modal-dialog">
                             <div class="modal-content">
@@ -304,7 +285,6 @@ $issues = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                     
                                     <?php
                                         $com_iss_id = $issue['id'];
-                                        // Fetch comments this particular issue: gpcorser
                                         $comments_sql = "SELECT * FROM iss_comments, iss_persons 
                                             WHERE iss_id = $com_iss_id
                                             AND `iss_persons`.id = per_id
@@ -339,7 +319,6 @@ $issues = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         </div>
                     </div>
 
-                    <!-- Update Modal -->
                     <div class="modal fade" id="updateIssue<?= $issue['id']; ?>" tabindex="-1">
                         <div class="modal-dialog">
                             <div class="modal-content">
@@ -385,7 +364,6 @@ $issues = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         </div>
                     </div>
 
-                    <!-- Delete Modal -->
                     <div class="modal fade" id="deleteIssue<?= $issue['id']; ?>" tabindex="-1">
                         <div class="modal-dialog">
                             <div class="modal-content">
