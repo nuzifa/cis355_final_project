@@ -4,7 +4,7 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 session_start();
-require './database/database.php'; // Include database connection
+require './database/database.php'; 
 
 $pdo = Database::connect();
 $error = '';
@@ -14,7 +14,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $password = $_POST['password'];
 
     if (!empty($email) && !empty($password)) {
-        // Query to check user credentials and verification status
         $sql = "SELECT * FROM iss_persons WHERE email = :email LIMIT 1";
         $stmt = $pdo->prepare($sql);
         $stmt->execute(['email' => $email]);
@@ -25,13 +24,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             if ($hashedPassword === $user['pwd_hash']) {
                 if ($user['verified'] == 1) {
-                    // Start session and store user info
-                    $_SESSION['user_id'] = $user['id'];
+                    $_SESSION['user_id'] = $user['id']; 
+                    $_SESSION['admin'] = $user['admin']; 
                     $_SESSION['fname'] = $user['fname'];
                     $_SESSION['lname'] = $user['lname'];
-                    $_SESSION['admin'] = $user['admin'];
 
-                    // Redirect to issues_list.php
                     header("Location: issues_list.php");
                     exit();
                 } else {
@@ -61,7 +58,7 @@ Database::disconnect();
 </head>
 <body>
     <div class="container">
-        <h2>ISS2: Login</h2>
+        <h2>Login</h2>
         <?php if ($error): ?>
             <p style="color: red;"><?php echo htmlspecialchars($error); ?></p>
         <?php endif; ?>

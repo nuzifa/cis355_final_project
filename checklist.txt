@@ -2,15 +2,10 @@ This is the list of things that will be graded.
 0. Does NOT need to be hosted. You can just use XAMPP. But code must be on GitHub.
 
  
-2. Three complete CRUD applets. 
-   a. Persons (List, Create, Read, Update and Delete)
- 
+2. Three complete CRUD applets.  
    c. Comments (List, Create, Read, Update and Delete). 
    The comments MUST appear in the issues detail screen. 
    The comments might only appear in the issues detail screen. 
-
-5. Extra credit: add column (person's name), filter by name
-
 
 
 
@@ -18,6 +13,7 @@ This is the list of things that will be graded.
 
 
 2. Three complete CRUD applets.
+   a. Persons (List, Create, Read, Update and Delete)
    b. Issues (List, Create, Read, Update and Delete)
 
 1. Login and Join. and Logout. 
@@ -34,4 +30,4 @@ This is the list of things that will be graded.
 4. On issues list screen there should be a way to view ALL issues 
    or just OPEN issues (default should be OPEN only)
 
-5. Extra credit: sort by columns, create multi-page list
+5. Extra credit: sort by columns, create multi-page list, add column (person's name), filter by name.

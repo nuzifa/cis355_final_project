@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Mar 24, 2025 at 04:11 PM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- Host: localhost
+-- Generation Time: Apr 26, 2025 at 04:36 AM
+-- Server version: 10.4.28-MariaDB
+-- PHP Version: 8.0.28
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `cis355`
+-- Database: `cis355_final`
 --
 
 -- --------------------------------------------------------
@@ -29,6 +29,7 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `iss_issues` (
   `id` int(11) NOT NULL,
+  `created_by` int(11) NOT NULL,
   `short_description` varchar(255) NOT NULL,
   `long_description` text NOT NULL,
   `open_date` date NOT NULL,
@@ -43,10 +44,15 @@ CREATE TABLE `iss_issues` (
 -- Dumping data for table `iss_issues`
 --
 
-INSERT INTO `iss_issues` (`id`, `short_description`, `long_description`, `open_date`, `close_date`, `priority`, `org`, `project`, `per_id`) VALUES
-(1, 'cs451 solidity', 'The course, cs451, needs to be updated to include blockchain concepts, ethereum network, remix IDE and solidity programming language.', '2025-02-19', '0000-00-00', 'C', '', 'csis', 1),
-(2, 'cis355 login screen dfg df g', 'We need to develop the login functionality. We need to verify email before allowing login. So there needs to be a Join link and a verification process', '2025-03-19', '0000-00-00', '', '', 'csis', 1),
-(3, 'cis355 issues list screen', 'wdfg jsdlkf jgsldkf jglskdfj g;sldf gjs;ldkf jgl;sdkfj gl;sdkfj g;lsdfk jg;lskdf gjs;ldfk gjsl;dkf jgl;skdfj gls;dkfjg;lsdfkjg;lsdkf jgsl;dfg', '2025-03-19', '0000-00-00', 'Low', 'csisdept', 'csis', 1);
+INSERT INTO `iss_issues` (`id`, `created_by`, `short_description`, `long_description`, `open_date`, `close_date`, `priority`, `org`, `project`, `per_id`) VALUES
+(63, 2, '2', 'nuz', '2025-04-25', '0000-00-00', 'High', 'cis355', 'final', 4),
+(64, 2, '2.a', 'nuz', '2025-04-25', '0000-00-00', 'Medium', 'cis355', 'final', 5),
+(66, 3, '3', 'nazifa', '2025-04-25', '0000-00-00', 'High', 'cis355', 'final', 4),
+(67, 3, '3.a', 'nazifa', '2025-04-25', '0000-00-00', 'Low', 'cis355', 'final', 5),
+(68, 4, '4', 'joey', '2025-04-25', '0000-00-00', 'High', 'cis355', 'final', 4),
+(69, 4, '4.a', 'joey', '2025-04-25', '0000-00-00', 'High', 'cis355', 'final', 5),
+(70, 5, '5', 'chandler', '2025-04-25', '0000-00-00', 'High', 'cis355', 'final', 5),
+(71, 5, '5.a', 'chandler', '2025-04-25', '0000-00-00', 'High', 'cis355', 'final', 4);
 
 --
 -- Indexes for dumped tables
@@ -66,7 +72,7 @@ ALTER TABLE `iss_issues`
 -- AUTO_INCREMENT for table `iss_issues`
 --
 ALTER TABLE `iss_issues`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=80;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
